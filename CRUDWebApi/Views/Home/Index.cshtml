@@ -1,0 +1,132 @@
+﻿<header>
+    <div class="content-wrapper">
+        <div class="float-left">
+            <p class="site-title">
+                <a href="~/">Web API</a></p>
+        </div>
+    </div>
+</header>
+<div id="body" style="background-color:whitesmoke">
+    <section class="featured" style="background-color:whitesmoke">
+        <div class="content-wrapper" style="background-color:whitesmoke">
+           <div>
+               <table>
+                 <tr><td><button onclick="GetAll();return false;">Get All Records</button></td></tr>
+               </table>
+           </div>
+           <div>
+             <table>
+                 <tr><td>Id:</td><td><input type="text" id="txtId" /></td></tr>
+                 <tr><td>Application Id:</td><td><input type="text" id="txtAppId" /></td></tr>
+                 <tr><td>Amount:</td><td><input type="text" id="txtAmount" /></td></tr>
+                 <tr><td>Summary:</td><td><input type="text" id="txtSummary" /></td></tr>                 
+             </table>
+             <table>
+                 <tr><td><button onclick="Add();return false;">Add</button></td><td><button onclick="Update();return false;">Update</button></td></tr>
+             </table>                                         
+           </div>
+            <div>
+             <table>                 
+                 <tr><td>Application Id:</td><td><input type="text" id="DeltxtAppId" /></td></tr>                                 
+             </table>
+             <table>
+                 <tr><td><button onclick="Delete();return false;">Delete</button></td></tr>
+             </table>                                         
+           </div>
+        </div>
+    </section>
+</div>
+<ul class="Record">
+    <li>
+        <div id="dRes"></div>
+    </li>
+</ul>
+
+<script>
+    function Add() {        
+        jQuery.support.cors = true;
+        var account = {
+            Id: $('#txtId').val(),
+            ApplicationId: $('#txtAppId').val(),
+            Amount: $('#txtAmount').val(), 
+            Summary: $('#txtSummary').val()                               
+        };       
+        $.ajax({
+            url: 'http://localhost:28249/api/AccountService/Add',
+            type: 'POST',
+            data: JSON.stringify(account),
+            contentType: "application/json;charset=utf-8",
+            success: function (data) {
+                GetResult(data);
+            },
+            error: function (x, y, z) {
+                alert(x + '\n' + y + '\n' + z);
+            }
+        });
+    }
+
+    function Update() {
+        jQuery.support.cors = true;
+        var account = {
+            Id: $('#txtId').val(),
+            ApplicationId: $('#txtAppId').val(),
+            Amount: $('#txtAmount').val(),
+            Summary: $('#txtSummary').val()
+        };
+        $.ajax({
+            url: 'http://localhost:28249/api/AccountService/Update',
+            type: 'POST',
+            data: JSON.stringify(account),
+            contentType: "application/json;charset=utf-8",
+            success: function (data) {
+                GetResult(data);
+            },
+            error: function (x, y, z) {
+                alert(x + '\n' + y + '\n' + z);
+            }
+        });
+    }
+
+    function Delete() {
+        jQuery.support.cors = true;
+        var account = {            
+            ApplicationId: $('#DeltxtAppId').val()
+        };
+        $.ajax({
+            url: 'http://localhost:28249/api/AccountService/Delete',
+            type: 'POST',
+            data: JSON.stringify(account),
+            contentType: "application/json;charset=utf-8",
+            success: function (data) {
+                GetResult(data);
+            },
+            error: function (x, y, z) {
+                alert(x + '\n' + y + '\n' + z);
+            }
+        });
+    }
+
+    function GetAll() {
+        jQuery.support.cors = true;
+        $.ajax({
+            url: 'http://localhost:28249/api/AccountService/Get',
+            type: 'GET',
+            dataType: 'json',            
+            success: function (data) {
+                GetResult(data);                                    
+            },
+            error: function (x, y, z) {
+                alert(x + '\n' + y + '\n' + z);
+            }
+        });        
+    }
+
+    function GetResult(account) {        
+        var strRes = "<table><th>ID</th><th>App ID</th><th>Amount</th><th>Summary</th>";        
+        $.each(account, function (index, account) {                        
+            strRes += "<tr><td>" + account.Id + "</td><td> " + account.ApplicationId + "</td><td>" + account.Amount + "</td><td>" + account.Summary + "</td></tr>";
+        });
+        strRes += "</table>";
+        $("#dRes").html(strRes);
+    }    
+</script>
